@@ -1,4 +1,8 @@
-from normalization import DevanagariNormalizer
+import pickle
+
+from HindiNLTK.normalization import DevanagariNormalizer
+
+from HindiNLTK.tokenizer import Tokenizer
 
 stopwords = ['मैं', 'मुझको', 'मेरा', 'अपने', 'आप', 'को', 'हमने', 'हमारा', 'अपना', 'हम', 'आप', 'आपका', 'तुम्हारा',
              'अपने', 'आप', 'स्वयं', 'वह', 'इसे', 'उसके', 'खुद', 'को', 'कि', 'वह', 'उसकी', 'उसका', 'खुद', 'ही', 'यह',
@@ -34,13 +38,64 @@ def remove_stopwords(tokens):
             text.append(token)
     return text
 
-# f = open("final_stopwords.txt", "r", encoding="utf-8")
+
+# # f = open("final_stopwords.txt", "r", encoding="utf-8")
 # for x in f:
 #   # print(x)
 #   stopwords.append(x[0:-1])
-#
+def _generate_stem_words(word):
+    suffixes = {
+        1: [u"ो", u"े", u"ू", u"ु", u"ी", u"ि", u"ा"],
+        2: [u"कर", u"ाओ", u"िए", u"ाई", u"ाए", u"ने", u"नी", u"ना", u"ते", u"ीं", u"ती", u"ता", u"ाँ", u"ां", u"ों",
+            u"ें"],
+        3: [u"ाकर", u"ाइए", u"ाईं", u"ाया", u"ेगी", u"ेगा", u"ोगी", u"ोगे", u"ाने", u"ाना", u"ाते", u"ाती", u"ाता",
+            u"तीं", u"ाओं", u"ाएं", u"ुओं", u"ुएं", u"ुआं"],
+        4: [u"ाएगी", u"ाएगा", u"ाओगी", u"ाओगे", u"एंगी", u"ेंगी", u"एंगे", u"ेंगे", u"ूंगी", u"ूंगा", u"ातीं",
+            u"नाओं", u"नाएं", u"ताओं", u"ताएं", u"ियाँ", u"ियों", u"ियां"],
+        5: [u"ाएंगी", u"ाएंगे", u"ाऊंगी", u"ाऊंगा", u"ाइयाँ", u"ाइयों", u"ाइयां"],
+    }
+    for L in 5, 4, 3, 2, 1:
+        if len(word) > L + 1:
+            for suf in suffixes[L]:
+                # print type(suf),type(word),word,suf
+                if word.endswith(suf):
+                    # print 'h'
+                    return word[:-L]
+    return word
+
+
+def generate_stem_dict(tokens):
+    '''returns a dictionary of stem words for each token'''
+
+    stem_word = {}
+    for each_token in tokens:
+        # print type(each_token)
+        temp = _generate_stem_words(each_token)
+        # print temp
+        stem_word[each_token] = temp
+
+    return stem_word
+
+
+def generate_stem_list(tokens):
+    stem_word = []
+    for each_token in tokens:
+        # print type(each_token)
+        temp = _generate_stem_words(each_token)
+        # print temp
+        stem_word.append(temp)
+
+    return stem_word
+
+
 # print(stopwords)
-# t = Tokenizer()
-# l = (t.tokenize("ही माय मेंअमे || इस वैभव ।। //"))
-# print(l)
+t = Tokenizer()
+l = (t.tokenize("इराक के विदेश मंत्री ने अमरीका के उस प्रस्ताव का मजाक उड़ाया है , जिसमें अमरीका ने संयुक्त राष्ट्र के "
+                "प्रतिबंधों को इराकी नागरिकों के लिए कम हानिकारक बनाने के लिए कहा है ।"))
+# Load data (deserialize)
+with open('save.p', 'rb') as handle:
+    m = pickle.load(handle)
+new_tagged = (m.tag(l))
+print(new_tagged)
 # print(remove_stopwords(l))
+print(generate_stem_dict(l))
