@@ -1,7 +1,7 @@
 import sys, codecs, string, itertools, re
 from os import name
 
-import utils
+import HindiNLTK.utils as utils
 
 
 class NormalizerI(object):
