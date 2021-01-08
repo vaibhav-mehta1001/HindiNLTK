@@ -9,7 +9,7 @@ class Tokenizer():
         self.sp = spm.SentencePieceProcessor()
         self.sp.Load("tokenizer_model.model")
 
-    def tokenize(self, t: str) -> List[str]:
+    def word_tokenize(self, t: str) -> List[str]:
 
         l = self.sp.EncodeAsPieces(t)
         q = []
@@ -19,3 +19,16 @@ class Tokenizer():
             else:
                 q.append(a)
         return q
+
+    def sentence_tokenize(self, t: str):
+        sentences = []
+        sentence = ""
+        i = 0
+        for c in t:
+            if c == "।" or c == '|' and i > 0:
+                sentences.append(sentence)
+                sentence = ""
+            else:
+                sentence += c
+            i += 1
+        return sentences
