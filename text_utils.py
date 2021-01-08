@@ -1,8 +1,8 @@
 import pickle
 
 from HindiNLTK.normalization import DevanagariNormalizer
-
 from HindiNLTK.tokenizer import Tokenizer
+from HindiNLTK.transliterate import Transliterate
 
 stopwords = ['मैं', 'मुझको', 'मेरा', 'अपने', 'आप', 'को', 'हमने', 'हमारा', 'अपना', 'हम', 'आप', 'आपका', 'तुम्हारा',
              'अपने', 'आप', 'स्वयं', 'वह', 'इसे', 'उसके', 'खुद', 'को', 'कि', 'वह', 'उसकी', 'उसका', 'खुद', 'ही', 'यह',
@@ -89,13 +89,15 @@ def generate_stem_list(tokens):
 
 
 # print(stopwords)
-t = Tokenizer()
-l = (t.tokenize("इराक के विदेश मंत्री ने अमरीका के उस प्रस्ताव का मजाक उड़ाया है , जिसमें अमरीका ने संयुक्त राष्ट्र के "
-                "प्रतिबंधों को इराकी नागरिकों के लिए कम हानिकारक बनाने के लिए कहा है ।"))
-# Load data (deserialize)
-with open('save.p', 'rb') as handle:
-    m = pickle.load(handle)
-new_tagged = (m.tag(l))
-print(new_tagged)
+# t = Tokenizer()
+# l = (t.tokenize("इराक के विदेश मंत्री ने अमरीका के उस प्रस्ताव का मजाक उड़ाया है , जिसमें अमरीका ने संयुक्त राष्ट्र के "
+#                 "प्रतिबंधों को इराकी नागरिकों के लिए कम हानिकारक बनाने के लिए कहा है ।"))
+# # Load data (deserialize)
+# with open('save.p', 'rb') as handle:
+#     m = pickle.load(handle)
+# new_tagged = (m.tag(l))
+# print(new_tagged)
+tr = Transliterate()
+print(tr.transliterate(["Iraq", "has", "foreign", "citizens"]))
 # print(remove_stopwords(l))
-print(generate_stem_dict(l))
+# print(generate_stem_dict(l))
