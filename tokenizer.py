@@ -9,6 +9,13 @@ class Tokenizer():
         self.sp = spm.SentencePieceProcessor()
         self.sp.Load("tokenizer_model.model")
 
+    def tokenize_sentences(self, sents):
+        l = []
+        for sent in sents:
+            for word in sent:
+                l.append(self.word_tokenize(word))
+        return l
+
     def word_tokenize(self, t: str) -> List[str]:
 
         l = self.sp.EncodeAsPieces(t)
